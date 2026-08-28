@@ -57,6 +57,7 @@ ssh -T git@github.com
 - brew install node@24
 - brew install rustup
 - brew install vite
+- brew install typescript
 
 - brew install python@3.14
 - brew install go
@@ -152,6 +153,12 @@ tdf --help
 
 echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
+```
+
+## sqlfluff
+```
+[sqlfluff]
+dialect = postgres
 ```
 
 ## wezterm
@@ -281,4 +288,50 @@ Installed (33)
   ✓ ts-comments.nvim                 ok        123a9fb1 -> latest
   ✓ which-key.nvim                   ok        3aab2147 -> latest
 
+```
+
+## treesitter
+
+```
+bash, 
+bicep, 
+c, 
+c_sharp, 
+cpp, 
+css, 
+cuda, 
+dockerfile,
+go, 
+gomod, 
+gosum, 
+gotmpl, 
+gowork, 
+graphql,
+hcl, 
+html,
+java, 
+javadoc, 
+javascript, 
+jsdoc, 
+json,
+lua,
+markdown, 
+markdown_inline, 
+mermaid,
+nginx,
+powershell, 
+prisma, 
+python,
+regex, 
+requirements, 
+rust,
+sql, 
+swift,
+terraform, 
+toml, 
+tsx, 
+typescript,
+vim, 
+vimdoc, 
+yaml
 ```

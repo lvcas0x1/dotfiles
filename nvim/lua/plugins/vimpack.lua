@@ -5,7 +5,7 @@ local state = {
 	win = nil,
 	items = {},
 	loading = false,
-	message = "Press r to refresh.",
+	message = "Loading...",
 }
 
 local ns = vim.api.nvim_create_namespace("pack-manager")
@@ -32,14 +32,10 @@ end
 
 local function short_rev(rev)
 	if not rev or rev == "" then
-		return "latest"
+		return "unknown"
 	end
 
 	return rev:sub(1, 8)
-end
-
-local function has_update(item)
-	return item.rev and item.rev_to and item.rev ~= item.rev_to
 end
 
 local function close()
@@ -87,15 +83,19 @@ local function float_config()
 end
 
 local function status_counts()
-	local updates = 0
+	local updates, unchecked, errors = 0, 0, 0
 
 	for _, item in ipairs(state.items) do
-		if has_update(item) then
+		if item.check_error then
+			errors = errors + 1
+		elseif not item.checked then
+			unchecked = unchecked + 1
+		elseif item.has_update then
 			updates = updates + 1
 		end
 	end
 
-	return updates
+	return updates, unchecked, errors
 end
 
 local function render()
@@ -103,31 +103,46 @@ local function render()
 		return
 	end
 
-	local updates = status_counts()
+	local updates, unchecked, errors = status_counts()
 
 	local lines = {
 		"                pack.nvim",
 		"",
-		" (o) Open Source    (r) Refresh    (u) Update selected    (U) Update all    (q) Quit",
+		" (o) Open Source    (r) Refresh & check    (u) Apply selected    (U) Apply All",
 		"",
-		"  Installed (" .. tostring(#state.items) .. ")",
+		"  Installed (" .. tostring(#state.items) .. ")   Updates: " .. tostring(updates) .. "   Unchecked: " .. tostring(unchecked),
 		"",
 	}
 
+	local mark_hls = {}
+
 	for _, item in ipairs(state.items) do
-		local mark = has_update(item) and "↑" or "✓"
-		local status = has_update(item) and "update" or "ok"
+		local mark, mark_hl
+		if item.check_error then
+			mark, mark_hl = "!", "DiagnosticError"
+		elseif not item.checked then
+			mark, mark_hl = "?", "Comment"
+		elseif item.has_update then
+			mark, mark_hl = "↑", "DiagnosticWarn"
+		else
+			mark, mark_hl = "✓", "DiagnosticOk"
+		end
+
+		local rev_part = short_rev(item.rev)
+		if item.checked and item.has_update then
+			rev_part = short_rev(item.rev) .. " -> " .. short_rev(item.rev_to)
+		end
 
 		local line = string.format(
-			"  %s %-32s %-8s  %s -> %s",
+			"  %s %-32s %-10s %s",
 			mark,
 			plugin_name(item),
-			status,
-			short_rev(item.rev),
-			short_rev(item.rev_to)
+			item.active and "active" or "inactive",
+			rev_part
 		)
 
 		table.insert(lines, line)
+		mark_hls[#lines] = mark_hl
 	end
 
 	if #state.items == 0 then
@@ -137,7 +152,9 @@ local function render()
 	table.insert(lines, "")
 	table.insert(lines, "  " .. state.message)
 	table.insert(lines, "")
-	table.insert(lines, "  Installed: " .. tostring(#state.items) .. "  Updates: " .. tostring(updates))
+	if errors > 0 then
+		table.insert(lines, "  " .. tostring(errors) .. " package(s) failed to check.")
+	end
 
 	vim.bo[state.buf].modifiable = true
 	vim.api.nvim_buf_set_lines(state.buf, 0, -1, false, lines)
@@ -145,56 +162,9 @@ local function render()
 
 	vim.api.nvim_buf_clear_namespace(state.buf, ns, 0, -1)
 
-	for i, line in ipairs(lines) do
-		if line:find("update", 1, true) then
-			vim.api.nvim_buf_add_highlight(state.buf, ns, "DiagnosticWarn", i - 1, 0, -1)
-		elseif line:match("^  ✓") then
-			vim.api.nvim_buf_add_highlight(state.buf, ns, "DiagnosticOk", i - 1, 0, 5)
-		elseif line:match("^  ↑") then
-			vim.api.nvim_buf_add_highlight(state.buf, ns, "DiagnosticWarn", i - 1, 0, 5)
-		end
+	for line_no, hl in pairs(mark_hls) do
+		vim.api.nvim_buf_add_highlight(state.buf, ns, hl, line_no - 1, 2, 5)
 	end
-end
-
-local function refresh()
-	if state.loading then
-		return
-	end
-
-	state.loading = true
-	state.message = "Checking updates..."
-	render()
-
-	vim.schedule(function()
-		local ok, items = pcall(vim.pack.get, nil, {
-			offline = false,
-		})
-
-		state.loading = false
-
-		if not ok then
-			state.items = {}
-			state.message = "Refresh failed."
-			render()
-			return
-		end
-
-		table.sort(items, function(a, b)
-			return plugin_name(a) < plugin_name(b)
-		end)
-
-		state.items = items
-
-		local updates = status_counts()
-
-		if updates == 0 then
-			state.message = "All packages are up to date."
-		else
-			state.message = tostring(updates) .. " package(s) can be updated."
-		end
-
-		render()
-	end)
 end
 
 local function selected_item()
@@ -212,6 +182,177 @@ local function selected_item()
 	return state.items[index]
 end
 
+-- vim.pack.get() never fetches from remote and has no field for a "target"
+-- revision, so on its own it cannot tell whether an update is available.
+-- The only API that actually computes that is vim.pack.update(), which
+-- (with force = false) fetches and opens Neovim's own confirmation buffer
+-- containing the real diff. We drive that call, read the diff out of the
+-- buffer it produces, then cancel it (close the window, same as :quit)
+-- so nothing is applied yet -- this is purely a status check.
+local function parse_confirm_lines(lines)
+	local by_name = {}
+	local section = nil
+	local current = nil
+
+	local function push()
+		if current then
+			by_name[current.name] = current
+		end
+		current = nil
+	end
+
+	for _, line in ipairs(lines) do
+		local name = line:match("^## (.+)$")
+		local section_word = (not name) and line:match("^# (%a+)")
+
+		if name then
+			push()
+			name = name:gsub("%s+%(not active%)$", "")
+			current = { name = name, section = section and section:lower(), count = 0 }
+		elseif section_word then
+			push()
+			section = section_word
+		elseif current then
+			local before = line:match("^Revision before:%s+(%S+)")
+			local after = line:match("^Revision after:%s+(%S+)")
+			local same_rev = line:match("^Revision:%s+(%S+)")
+
+			if before then
+				current.rev_before = before
+			elseif after then
+				current.rev_after = after
+			elseif same_rev then
+				current.rev = same_rev
+			elseif line:match("^> ") then
+				current.count = current.count + 1
+			end
+		end
+	end
+	push()
+
+	return by_name
+end
+
+local function check_updates(names, label)
+	state.message = "Fetching " .. label .. "... this can take a while."
+	render()
+
+	vim.schedule(function()
+		local ok, err = pcall(vim.pack.update, names, { offline = false, force = false })
+
+		if not ok then
+			state.message = "Check failed: " .. tostring(err)
+			render()
+			return
+		end
+
+		local buf = vim.api.nvim_get_current_buf()
+		local bufname = vim.api.nvim_buf_get_name(buf)
+
+		if not bufname:match("^nvim%-pack://confirm") then
+			state.message = "Nothing to check."
+			render()
+			return
+		end
+
+		local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+		local by_name = parse_confirm_lines(lines)
+
+		-- Cancel the confirmation buffer (equivalent to :quit): nothing gets
+		-- applied, we only wanted the diff it computed.
+		pcall(vim.api.nvim_win_close, vim.api.nvim_get_current_win(), true)
+
+		-- Only mark the plugins we actually asked about as checked. `names`
+		-- is nil when checking everything; otherwise it's the exact subset
+		-- that was fetched, and every other item's status must stay as-is.
+		local target = nil
+		if names then
+			target = {}
+			for _, n in ipairs(names) do
+				target[n] = true
+			end
+		end
+
+		for _, item in ipairs(state.items) do
+			local pname = plugin_name(item)
+			if target == nil or target[pname] then
+				local info = by_name[pname]
+				item.checked = true
+				item.has_update = info ~= nil and info.section == "update"
+				item.check_error = info == nil or info.section == "error"
+				item.rev_to = info and info.rev_after or nil
+			end
+		end
+
+		local updates, _, errors = status_counts()
+
+		if errors > 0 then
+			state.message = errors .. " package(s) failed to check, " .. updates .. " have updates."
+		elseif updates == 0 then
+			state.message = "All checked packages are up to date."
+		else
+			state.message = updates .. " package(s) have updates available. Press u/U to apply."
+		end
+
+		render()
+	end)
+end
+
+local function refresh()
+	if state.loading then
+		return
+	end
+
+	local ok, items = pcall(vim.pack.get, nil, { info = false })
+
+	if not ok then
+		state.items = {}
+		state.message = "Failed to list plugins: " .. tostring(items)
+		render()
+		return
+	end
+
+	table.sort(items, function(a, b)
+		return plugin_name(a) < plugin_name(b)
+	end)
+
+	state.items = items
+	render()
+
+	check_updates(nil, "all packages")
+end
+
+local function check_selected()
+	local item = selected_item()
+
+	if not item then
+		state.message = "Select a package first."
+		render()
+		return
+	end
+
+	check_updates({ plugin_name(item) }, plugin_name(item))
+end
+
+local function apply_update(names, label)
+	state.message = "Applying update for " .. label .. "..."
+	render()
+
+	vim.schedule(function()
+		local ok, err = pcall(vim.pack.update, names, { offline = false, force = true })
+
+		if not ok then
+			state.message = "Update failed: " .. tostring(err)
+			render()
+			return
+		end
+
+		state.message = "Update applied. Re-checking..."
+		render()
+		check_updates(names, label)
+	end)
+end
+
 local function update_selected()
 	local item = selected_item()
 
@@ -221,57 +362,25 @@ local function update_selected()
 		return
 	end
 
-	state.message = "Updating " .. plugin_name(item) .. "..."
-	render()
-
-	vim.schedule(function()
-		local ok, err = pcall(vim.pack.update, {
-			plugin_name(item),
-		})
-
-		if not ok then
-			state.message = "Update failed: " .. tostring(err)
-			render()
-			return
-		end
-
-		state.message = "Update finished. Refreshing..."
-		render()
-		refresh()
-	end)
+	apply_update({ plugin_name(item) }, plugin_name(item))
 end
 
 local function update_all()
-	local names = {}
+	local pending = {}
 
 	for _, item in ipairs(state.items) do
-		if has_update(item) then
-			table.insert(names, plugin_name(item))
+		if item.has_update then
+			table.insert(pending, plugin_name(item))
 		end
 	end
 
-	if #names == 0 then
-		state.message = "No updates available."
+	if #pending == 0 then
+		state.message = "No pending updates. Press (r) to refresh & check again."
 		render()
 		return
 	end
 
-	state.message = "Updating all packages..."
-	render()
-
-	vim.schedule(function()
-		local ok, err = pcall(vim.pack.update, names)
-
-		if not ok then
-			state.message = "Update failed: " .. tostring(err)
-			render()
-			return
-		end
-
-		state.message = "Update finished. Refreshing..."
-		render()
-		refresh()
-	end)
+	apply_update(pending, tostring(#pending) .. " package(s)")
 end
 
 local function open_source()
@@ -320,12 +429,15 @@ function M.open()
 	vim.wo[state.win].relativenumber = false
 	vim.wo[state.win].cursorline = true
 	vim.wo[state.win].signcolumn = "no"
-	vim.wo[state.win].wrap = false
+	vim.wo[state.win].wrap = true
+	vim.wo[state.win].linebreak = true
 
 	vim.keymap.set("n", "q", close, { buffer = state.buf, silent = true, desc = "Close" })
-	vim.keymap.set("n", "r", refresh, { buffer = state.buf, silent = true, desc = "Refresh" })
-	vim.keymap.set("n", "u", update_selected, { buffer = state.buf, silent = true, desc = "Update Selected" })
-	vim.keymap.set("n", "U", update_all, { buffer = state.buf, silent = true, desc = "Update All" })
+	vim.keymap.set("n", "<Esc>", close, { buffer = state.buf, silent = true, desc = "Close" })
+	vim.keymap.set("n", "r", refresh, { buffer = state.buf, silent = true, desc = "Refresh & Check" })
+	vim.keymap.set("n", "gc", check_selected, { buffer = state.buf, silent = true, desc = "Check Updates (Selected)" })
+	vim.keymap.set("n", "u", update_selected, { buffer = state.buf, silent = true, desc = "Apply Selected" })
+	vim.keymap.set("n", "U", update_all, { buffer = state.buf, silent = true, desc = "Apply All" })
 	vim.keymap.set("n", "o", open_source, { buffer = state.buf, silent = true, desc = "Open Source" })
 
 	vim.api.nvim_create_autocmd("VimResized", {
