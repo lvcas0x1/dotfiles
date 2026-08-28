@@ -1,0 +1,7 @@
+# 念のためフォルダがなければ作る
+mkdir -p ~/.hammerspoon
+ 
+# init.lua へのシンボリックリンクを作成
+ln -s /Users/lvcas0x1/.config/hammerspoon/init.lua ~/.hammerspoon/init.lua
+ln -s /Users/lvcas0x1/.config/hammerspoon/app.lua ~/.hammerspoon/app.lua
+ln -s /Users/lvcas0x1/.config/hammerspoon/window.lua ~/.hammerspoon/window.lua

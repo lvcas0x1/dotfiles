@@ -1,0 +1,28 @@
+[mgr]
+
+ratio = [2, 2, 4]
+scrolloff = 1
+
+[preview]
+
+max_width = 8000
+max_height = 8000
+image_quality = 90
+
+[opener]
+video = [{ run = 'open -a IINA "$@"', orphan = true, desc = "IINA" }]
+audio = [{ run = 'open -a IINA "$@"', orphan = true, desc = "IINA" }]
+pdf = [
+  { run = 'wezterm cli split-pane --right --percent 50 -- tdf "$1"', orphan = true, desc = "tdf" },
+]
+
+[open]
+prepend_rules = [
+  { mime = "application/pdf", use = "pdf" },
+  { mime = "video/*", use = "video" },
+  { mime = "audio/*", use = "audio" },
+]
+
+[tasks]
+image_alloc = 0
+image_bound = [0, 0]

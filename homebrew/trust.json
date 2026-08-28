@@ -1,0 +1,13 @@
+{
+  "trustedformulae": [
+    "azure/bicep/bicep",
+    "hashicorp/tap/terraform",
+    "laishulu/homebrew/macism"
+  ],
+  "trustedtaps": [
+    "oven-sh/bun"
+  ],
+  "trustedcasks": [
+    "terraform-linters/tap/tflint"
+  ]
+}

@@ -1,0 +1,17 @@
+[user]
+	name = lvcas0x1
+	email = lvcas0x1@example.com
+
+[includeIf "gitdir:~/Documents/Work/"]
+  path = ~/.config/git/config-work
+
+[core]
+	editor = nvim
+	excludesfile = ~/.config/git/ignore
+	autocrlf = input
+
+[init]
+	defaultBranch = main
+
+[color]
+	ui = true

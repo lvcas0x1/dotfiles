@@ -1,0 +1,7 @@
+a
+  name: config-test
+  port: 3000
+
+eatures:
+  auth: true
+  cache: false
