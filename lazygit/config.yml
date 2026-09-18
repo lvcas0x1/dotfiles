@@ -1,9 +1,7 @@
 gui:
   showIcons: true
-
   authorColors:
     "*": "#7287fd"
-
   theme:
     activeBorderColor:
       - "#1e66f5"
@@ -30,12 +28,10 @@ gui:
       - "#d20f39"
     defaultFgColor:
       - "#4c4f69"
-
 os:
   editPreset: nvim
-
 git:
-  pagers:
-    - pager: delta --light --paging=never --line-numbers
+  diffRenderers:
+    - command: delta --light --paging=never --line-numbers
       colorArg: always
-    - {}
+    - type: rawGit

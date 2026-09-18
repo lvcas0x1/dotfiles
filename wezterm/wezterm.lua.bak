@@ -326,19 +326,4 @@ config.keys = {
 	},
 }
 
--- ------------------------------------------------------------
--- Session save / restore (wzsession)
--- ------------------------------------------------------------
--- Vendored under wezterm/wzsession/, so there is no plugin repo to go stale.
-package.path = wezterm.config_dir
-	.. "/?.lua;"
-	.. wezterm.config_dir
-	.. "/?/init.lua;"
-	.. package.path
-
-local wzsession = require("wzsession").setup({})
-
--- Appends SHIFT|CTRL s / o / d; leaves every existing binding untouched.
-wzsession.apply_keys(config)
-
 return config
