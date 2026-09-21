@@ -1,0 +1,35 @@
+{
+  "permissions": {
+  },
+  "model": "opus",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lvcas0x1/.claude/hooks/wzsession-session-id.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "aws-core@claude-plugins-official": true,
+    "aws-agents@claude-plugins-official": true,
+    "aws-data-analytics@claude-plugins-official": true,
+    "aws-agents-for-devsecops@agent-toolkit-for-aws": true,
+    "slack@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "agent-toolkit-for-aws": {
+      "source": {
+        "source": "github",
+        "repo": "aws/agent-toolkit-for-aws"
+      }
+    }
+  },
+  "theme": "light",
+  "agentPushNotifEnabled": true
+}
