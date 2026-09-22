@@ -4,6 +4,8 @@ vim.filetype.add({
 		mdx = "markdown.mdx",
 		gql = "graphql",
 		graphql = "graphql",
+		["c.doxygen"] = "c.doxygen",
+		["cpp.doxygen"] = "cpp.doxygen",
 	},
 
 	filename = {
