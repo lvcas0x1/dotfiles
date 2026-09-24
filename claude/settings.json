@@ -1,14 +1,13 @@
 {
-  "permissions": {
-  },
-  "model": "opus",
+  "permissions": {},
+  "model": "opus[1m]",
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/lvcas0x1/.claude/hooks/wzsession-session-id.py",
+            "command": "/Users/lvcas0x1/.config/claude/hooks/wzsession-session-id.py",
             "timeout": 5
           }
         ]

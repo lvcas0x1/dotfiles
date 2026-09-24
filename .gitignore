@@ -4,3 +4,8 @@
 /gh
 /nvim/log/pdf
 /swiftpm
+
+# Claude Code
+/claude/*
+!/claude/settings.json
+!/claude/hooks/

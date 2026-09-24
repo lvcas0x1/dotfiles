@@ -84,7 +84,7 @@ local function pane_user_var(pane, key)
 end
 
 -- Where the Claude Code SessionStart hook drops its session-id hints.
--- Set from init.setup(); see ~/.claude/hooks/wzsession-session-id.py
+-- Set from init.setup(); see ~/.config/claude/hooks/wzsession-session-id.py
 M.pane_hint_dir = nil
 
 ---Session id published by the hook for this pane, or nil.
@@ -265,7 +265,7 @@ local function leaf_of(info)
 	local cmd, proc, argv, fg_pid = foreground_command(pane)
 
 	-- Claude Code publishes its session id through a SessionStart hook; see
-	-- ~/.claude/hooks/wzsession-session-id.py. The pid-validated file is the
+	-- ~/.config/claude/hooks/wzsession-session-id.py. The pid-validated file is the
 	-- primary route; the user var is a secondary one that only works if the
 	-- escape sequence made it through.
 	local pane_id
