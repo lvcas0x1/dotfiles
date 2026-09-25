@@ -83,18 +83,20 @@ local function pane_user_var(pane, key)
 	return nil
 end
 
--- Where the Claude Code SessionStart hook drops its session-id hints.
--- Set from init.setup(); see ~/.config/claude/hooks/wzsession-session-id.py
+-- Where the SessionStart hooks of Claude Code and Codex drop their session-id
+-- hints. Set from init.setup(); see wzsession/hooks/session-id.py.
 M.pane_hint_dir = nil
 
----Session id published by the hook for this pane, or nil.
----The hint carries the pid of the claude process that wrote it, and is only
----trusted when that matches the process the pane is actually running. A nested
----claude (e.g. a one-shot `claude -p` fired from inside a session) writes to
----the same pane file but has a different pid, and must not be believed.
+---Session published by a hook for this pane, or nil.
+---Each entry carries the pid of the agent process that wrote it, and is only
+---trusted when that matches the process the pane is actually running. Agents
+---nest -- a `codex` started from inside a Claude Code session, or a one-shot
+---`claude -p` -- so a pane file holds one entry per pid and only the pane's own
+---foreground process may be believed.
 ---@param pane_id integer
 ---@param fg_pid integer|nil pid of the pane's foreground process
----@return string|nil
+---@return string|nil session_id
+---@return string|nil agent "claude" or "codex"
 local function pane_session_hint(pane_id, fg_pid)
 	if not M.pane_hint_dir or not fg_pid then
 		return nil
@@ -116,25 +118,36 @@ local function pane_session_hint(pane_id, fg_pid)
 		return nil
 	end
 
-	local hint_pid = tonumber(hint.pid)
-	local session_id = hint.session_id
-	if type(session_id) ~= "string" or session_id == "" then
+	local entries = hint.sessions
+	if entries == nil and hint.session_id then
+		-- schema 1: a single flat Claude Code entry per pane.
+		entries = { { pid = hint.pid, agent = "claude", session_id = hint.session_id } }
+	end
+	if entries == nil then
 		return nil
 	end
 
-	if hint_pid ~= fg_pid then
-		wezterm.log_info(
-			string.format(
-				"wzsession: ignoring session hint for pane %d (hint pid %s, pane pid %s)",
-				pane_id,
-				tostring(hint_pid),
-				tostring(fg_pid)
-			)
+	local seen = {}
+	for _, entry in ipairs(entries) do
+		local session_id = entry.session_id
+		if type(session_id) == "string" and session_id ~= "" then
+			local pid = tonumber(entry.pid)
+			if pid == fg_pid then
+				return session_id, entry.agent
+			end
+			seen[#seen + 1] = tostring(entry.pid)
+		end
+	end
+
+	wezterm.log_info(
+		string.format(
+			"wzsession: no session hint for pane %d matches its process (pane pid %s, hint pids %s)",
+			pane_id,
+			tostring(fg_pid),
+			table.concat(seen, ",")
 		)
-		return nil
-	end
-
-	return session_id
+	)
+	return nil
 end
 
 -- Flags by which claude selects a conversation. Dropped and replaced with the
@@ -184,6 +197,159 @@ end
 
 ---Exposed for tests.
 M._apply_claude_session = apply_claude_session
+
+-- `codex` puts everything behind subcommands. Only the ones that end up in the
+-- interactive TUI on a stored conversation may be turned into a resume; the
+-- rest (`codex exec`, `codex login`, ...) are left exactly as they were.
+local CODEX_SUBCOMMANDS = {
+	agents = true,
+	exec = true,
+	e = true,
+	review = true,
+	login = true,
+	logout = true,
+	mcp = true,
+	plugin = true,
+	["app-server"] = true,
+	["remote-control"] = true,
+	app = true,
+	completion = true,
+	update = true,
+	doctor = true,
+	sandbox = true,
+	debug = true,
+	apply = true,
+	a = true,
+	resume = true,
+	queue = true,
+	archive = true,
+	delete = true,
+	["migrate-rollouts"] = true,
+	unarchive = true,
+	fork = true,
+	cloud = true,
+	["exec-server"] = true,
+	features = true,
+	help = true,
+}
+local CODEX_RESUMABLE = { resume = true, fork = true }
+
+-- Options whose value is a separate argv entry, so the value must travel with
+-- the flag rather than being mistaken for the subcommand.
+local CODEX_FLAG_WITH_VALUE = {
+	["-c"] = true,
+	["--config"] = true,
+	["--enable"] = true,
+	["--disable"] = true,
+	["--remote"] = true,
+	["--remote-auth-token-env"] = true,
+	["-m"] = true,
+	["--model"] = true,
+	["--local-provider"] = true,
+	["-p"] = true,
+	["--profile"] = true,
+	["-s"] = true,
+	["--sandbox"] = true,
+	["-C"] = true,
+	["--cd"] = true,
+	["--add-dir"] = true,
+	["-a"] = true,
+	["--ask-for-approval"] = true,
+}
+
+-- Flags that only make sense for the invocation that started the conversation:
+-- the picker selectors, and --worktree, whose worktree the restored pane is
+-- already sitting in. --image takes a greedy list of files, so its values are
+-- dropped with it.
+local CODEX_FLAG_DROP = {
+	["--last"] = true,
+	["--all"] = true,
+	["--include-non-interactive"] = true,
+	["--worktree"] = true,
+}
+local CODEX_FLAG_DROP_WITH_VALUES = { ["-i"] = true, ["--image"] = true }
+
+---Rewrite a codex invocation so it reopens *this pane's* conversation.
+---A bare `codex` would restore an empty session and `codex resume --last` would
+---reopen whatever ran most recently anywhere -- the wrong one as soon as a
+---second codex is running. The prompt and the old session id are positional, so
+---every positional is dropped and replaced by `resume <id>`.
+---@param argv string[]
+---@param session_id string|nil
+---@return string[] argv
+local function apply_codex_session(argv, session_id)
+	if not session_id or not argv or #argv == 0 then
+		return argv
+	end
+	if (basename(argv[1]) or "") ~= "codex" then
+		return argv
+	end
+
+	local flags, subcommand_seen, i = {}, false, 2
+	while i <= #argv do
+		local a = argv[i]
+		if a == "--" then
+			-- Everything after this is the initial prompt.
+			break
+		elseif CODEX_FLAG_WITH_VALUE[a] then
+			flags[#flags + 1] = a
+			if argv[i + 1] then
+				flags[#flags + 1] = argv[i + 1]
+				i = i + 1
+			end
+		elseif CODEX_FLAG_DROP_WITH_VALUES[a] then
+			while argv[i + 1] and argv[i + 1]:sub(1, 1) ~= "-" do
+				i = i + 1
+			end
+		elseif CODEX_FLAG_DROP[a] then
+			-- drop
+		elseif a:sub(1, 1) == "-" and a ~= "-" then
+			-- A bare flag, or a --key=value that needs no lookahead.
+			flags[#flags + 1] = a
+		else
+			if not subcommand_seen then
+				subcommand_seen = true
+				if CODEX_SUBCOMMANDS[a] and not CODEX_RESUMABLE[a] then
+					return argv
+				end
+			end
+			-- Positionals are the prompt and the previous session id: drop both.
+		end
+		i = i + 1
+	end
+
+	local out = { argv[1] }
+	for _, f in ipairs(flags) do
+		out[#out + 1] = f
+	end
+	out[#out + 1] = "resume"
+	out[#out + 1] = session_id
+	return out
+end
+
+---Exposed for tests.
+M._apply_codex_session = apply_codex_session
+
+local REWRITERS = { claude = apply_claude_session, codex = apply_codex_session }
+
+---Rewrite `argv` so it reopens `session_id`, if this is an agent we know.
+---@param argv string[]
+---@param session_id string|nil
+---@param agent string|nil agent that published the id, when known
+---@return string[] argv
+local function apply_session(argv, session_id, agent)
+	if not argv or #argv == 0 then
+		return argv
+	end
+	local exe = basename(argv[1]) or ""
+	local rewrite = REWRITERS[exe]
+	-- The hint is pid-validated, so it already describes this very process; the
+	-- agent name is only a guard against a file written by some other tool.
+	if not rewrite or (agent and agent ~= exe) then
+		return argv
+	end
+	return rewrite(argv, session_id)
+end
 
 ---True when the pane is sitting at a shell prompt rather than running an app.
 ---Used before typing a restored command into a pane that is being reused.
@@ -264,10 +430,10 @@ local function leaf_of(info)
 
 	local cmd, proc, argv, fg_pid = foreground_command(pane)
 
-	-- Claude Code publishes its session id through a SessionStart hook; see
-	-- ~/.config/claude/hooks/wzsession-session-id.py. The pid-validated file is the
-	-- primary route; the user var is a secondary one that only works if the
-	-- escape sequence made it through.
+	-- Claude Code and Codex publish their session id through a SessionStart
+	-- hook; see wzsession/hooks/session-id.py. The pid-validated file is the
+	-- primary route; the user var is a Claude Code-only secondary one that works
+	-- only if the escape sequence made it through.
 	local pane_id
 	local pok, pid_val = pcall(function()
 		return pane:pane_id()
@@ -276,13 +442,16 @@ local function leaf_of(info)
 		pane_id = pid_val
 	end
 
-	local claude_session
+	local agent_session, agent
 	if pane_id then
-		claude_session = pane_session_hint(pane_id, fg_pid)
+		agent_session, agent = pane_session_hint(pane_id, fg_pid)
 	end
-	claude_session = claude_session or pane_user_var(pane, "claude_session_id")
-	if cmd and argv and claude_session then
-		local rewritten = apply_claude_session(argv, claude_session)
+	if not agent_session then
+		agent_session = pane_user_var(pane, "claude_session_id")
+		agent = agent_session and "claude" or nil
+	end
+	if cmd and argv and agent_session then
+		local rewritten = apply_session(argv, agent_session, agent)
 		if rewritten ~= argv then
 			cmd = wezterm.shell_join_args(rewritten)
 		end
@@ -296,7 +465,8 @@ local function leaf_of(info)
 		alt_screen = (alt_ok and alt) and true or false,
 		cmd = cmd,
 		proc = proc,
-		claude_session = claude_session,
+		agent = agent,
+		agent_session = agent_session,
 		-- inject_output only works on local panes.
 		text = (domain == "local") and pane_text(pane) or nil,
 	}

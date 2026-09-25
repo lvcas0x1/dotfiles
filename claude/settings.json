@@ -7,8 +7,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/lvcas0x1/.config/claude/hooks/wzsession-session-id.py",
+            "command": "/Users/lvcas0x1/.config/wezterm/wzsession/hooks/session-id.py claude",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/lvcas0x1/.config/claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
           }
         ]
       }

@@ -1,7 +1,19 @@
-notify = ["/Users/lvcas0x1/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
 model = "gpt-6-astra"
 model_reasoning_effort = "medium"
-personality = "pragmatic"
+
+notify = ["/Users/lvcas0x1/.config/codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+service_tier = "default"
+
+[desktop]
+followUpQueueMode = "steer"
+projectlessWorkspaceRoot = "/Users/lvcas0x1/Documents/codex"
+preventSleepWhileRunning = true
+ambient-suggestions-enabled = false
+show-context-window-usage = true
+composerEnterBehavior = "cmdAlways"
+dock-icon-preference = "codex-system"
+browser-show-full-url = true
+conversationDetailMode = "STEPS_PROSE"
 
 [marketplaces.openai-bundled]
 source_type = "local"
@@ -10,6 +22,19 @@ source = "/Users/lvcas0x1/.codex/.tmp/bundled-marketplaces/openai-bundled"
 [marketplaces.openai-primary-runtime]
 source_type = "local"
 source = "/Users/lvcas0x1/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[marketplaces.agent-toolkit-for-aws]
+source_type = "git"
+source = "https://github.com/aws/agent-toolkit-for-aws.git"
+
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."unified-computer-use@openai-bundled"]
+enabled = true
 
 [plugins."visualize@openai-bundled"]
 enabled = true
@@ -29,27 +54,23 @@ enabled = true
 [plugins."template-creator@openai-primary-runtime"]
 enabled = true
 
-[plugins."sites@openai-bundled"]
+[plugins."computer-use@openai-bundled"]
 enabled = true
 
 [plugins."chrome@openai-bundled"]
 enabled = true
 
-[plugins."computer-use@openai-bundled"]
+[plugins."aws-agents@agent-toolkit-for-aws"]
 enabled = true
 
-[plugins."browser@openai-bundled"]
+[plugins."aws-agents-for-devsecops@agent-toolkit-for-aws"]
 enabled = true
 
-[plugins."codex-app-tools@openai-bundled"]
+[plugins."aws-core@agent-toolkit-for-aws"]
 enabled = true
 
-[plugins."unified-computer-use@openai-bundled"]
+[plugins."aws-data-analytics@agent-toolkit-for-aws"]
 enabled = true
-
-[features]
-js_repl = false
-memories = true
 
 [mcp_servers.node_repl]
 args = []
@@ -60,17 +81,15 @@ startup_timeout_sec = 120
 NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
 NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
-NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lvcas0x1/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
-CODEX_HOME = "/Users/lvcas0x1/.codex"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lvcas0x1/.config/codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/lvcas0x1/.config/codex"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 BROWSER_USE_TINYSKY_ENABLED = "1"
-NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = ""
-NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = ""
-NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = ""
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.903.61454"
-NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/lvcas0x1/.codex/plugins/cache/openai-bundled/browser/26.903.61454/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
-SKY_CUA_SERVICE_PATH = "/Users/lvcas0x1/.codex/computer-use/Codex Computer Use.app"
+BROWSER_USE_CODEX_APP_VERSION = "26.917.71314"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/lvcas0x1/.config/codex/plugins/cache/openai-bundled/browser/26.917.71314/scripts/browser-service.mjs"}'
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
 [mcp_servers.computer-use]
@@ -79,38 +98,41 @@ args = ["mcp"]
 cwd = "."
 enabled = false
 
-[desktop]
-conversationDetailMode = "STEPS_PROSE"
-sansFontSize = 14
-codeFontSize = 13
-ambient-suggestions-enabled = false
-show-context-window-usage = true
-composerEnterBehavior = "cmdAlways"
-dock-icon-preference = "codex-system"
-followUpQueueMode = "queue"
-mac-menu-bar-enabled = false
+[mcp_servers.cua_repl]
+command = "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
+enabled = false
 
-[desktop.open-in-target-preferences]
-global = "terminal"
+[features]
+hooks = true
+memories = true
+prevent_idle_sleep = true
 
 [memories]
 generate_memories = true
 use_memories = true
 
-[projects."/Users/lvcas0x1/Documents/Codex/2026-07-11/nvim"]
+[projects."/Users/lvcas0x1/Documents/github/benchmark-jev"]
 trust_level = "trusted"
 
-[projects."/Users/lvcas0x1/Documents/Project/rssreader"]
+[projects."/Users/lvcas0x1"]
 trust_level = "trusted"
 
-[projects."/Users/lvcas0x1/Documents/Project/architecture"]
+[projects."/Users/lvcas0x1/.config"]
 trust_level = "trusted"
 
-[shell_environment_policy.set]
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,e13fd947e846d3d306e9249dd3c73d14931b6494803dbafb16cef85e6add9506"
+[projects."/Users/lvcas0x1/Documents/github/architecture"]
+trust_level = "trusted"
+
+[tui]
+screen_reader_detection_done = true
 
 [tui.model_availability_nux]
-gpt-6-astra = 1
+gpt-6-astra = 4
 
-[notice]
-hide_rate_limit_model_nudge = true
+[hooks.state]
+
+[hooks.state."/Users/lvcas0x1/.config/codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:ccacce59ead95dbbcfb9e40a75a0a56d0a9fae66158a0a88db085e255b0ce200"
+
+[hooks.state."/Users/lvcas0x1/.config/codex/hooks.json:session_start:1:0"]
+trusted_hash = "sha256:7672d0278e96ce0147db21e8569669270b83cb3a33f363fe17309afcfcefd508"

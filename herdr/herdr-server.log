@@ -1,0 +1,149 @@
+2026-09-25T01:22:27.861645Z  INFO herdr::server::headless::bootstrap: server using persistent user service context
+2026-09-25T01:22:27.861839Z  INFO herdr::platform::macos: raised server file descriptor soft limit previous=2560 target=8192
+2026-09-25T01:22:27.862022Z  INFO herdr::api::server: api server listening path=/Users/lvcas0x1/.config/herdr/herdr.sock
+2026-09-25T01:22:27.863876Z  INFO herdr::persist::io: session file is missing event="persist.restore" subsystem="persist" outcome="missing" path=/Users/lvcas0x1/.config/herdr/session.json
+2026-09-25T01:22:27.863919Z  INFO herdr::app: using pane scrollback configuration pane_scrollback_limit_bytes=10000000
+2026-09-25T01:22:27.886374Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-09-25T01:22:27.888560Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=1 rows=40 cols=120 scrollback_limit_bytes=10000000
+2026-09-25T01:22:27.891550Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=1 pid=4759
+2026-09-25T01:22:27.891854Z  INFO herdr::logging: workspace created event="workspace.create" subsystem="workspace" outcome="ok" workspace_id="w1" pane_id=1
+2026-09-25T01:22:27.891875Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T01:22:27.891897Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:22:27.891903Z  INFO herdr::server::headless::bootstrap: created startup workspace cwd=/Users/lvcas0x1
+2026-09-25T01:22:27.892025Z  INFO herdr::server::headless: client protocol socket listening path=/Users/lvcas0x1/.config/herdr/herdr-client.sock
+2026-09-25T01:22:27.892064Z  INFO herdr::server::headless::bootstrap: herdr server started api_socket=/Users/lvcas0x1/.config/herdr/herdr.sock client_socket=/Users/lvcas0x1/.config/herdr/herdr-client.sock
+2026-09-25T01:22:27.892315Z  INFO herdr::logging: herdr starting event="app.startup" subsystem="server" outcome="started" pid=4736
+2026-09-25T01:22:27.920270Z  INFO herdr::server::headless: client connected client_id=2 cols=197 rows=61 cell_width_px=16 cell_height_px=35 surface_active=true render_encoding=SemanticFrame
+2026-09-25T01:22:32.897094Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:24:31.236868Z  INFO herdr::logging: integration action finished event="integration.action" subsystem="integration" outcome="error" action="install" target="pi"
+2026-09-25T01:24:31.245704Z  INFO herdr::logging: integration action finished event="integration.action" subsystem="integration" outcome="ok" action="install" target="claude"
+2026-09-25T01:24:31.257750Z  INFO herdr::logging: integration action finished event="integration.action" subsystem="integration" outcome="ok" action="install" target="codex"
+2026-09-25T01:24:43.934443Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T01:24:43.934461Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:24:48.937881Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:25:06.281521Z  INFO herdr::pane: agent changed pane=1 previous_agent=None agent=Some(Codex) process=codex pgid=Some(6536)
+2026-09-25T01:26:13.887767Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:32:34.319927Z  INFO herdr::pane: agent changed pane=1 previous_agent=Some(Codex) agent=None pgid=Some(4759)
+2026-09-25T01:32:35.829133Z  INFO herdr::pane: agent changed pane=1 previous_agent=None agent=Some(Codex) process=codex pgid=Some(8438)
+2026-09-25T01:32:37.341396Z  INFO herdr::pane: agent changed pane=1 previous_agent=Some(Codex) agent=None pgid=Some(4759)
+2026-09-25T01:32:39.021103Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:32:42.879526Z  INFO herdr::pane: agent changed pane=1 previous_agent=None agent=Some(Codex) process=codex pgid=Some(8468)
+2026-09-25T01:34:57.364787Z  INFO herdr::pane: agent changed pane=1 previous_agent=Some(Codex) agent=None pgid=Some(4759)
+2026-09-25T01:35:02.395389Z  INFO herdr::pane: agent changed pane=1 previous_agent=None agent=Some(Claude) process=claude pgid=Some(8949)
+2026-09-25T01:35:09.438752Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:35:19.334205Z  INFO herdr::pane: agent changed pane=1 previous_agent=Some(Claude) agent=None pgid=Some(4759)
+2026-09-25T01:35:24.035435Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:38:15.732674Z  INFO herdr::server::headless: client detached client_id=2
+2026-09-25T01:38:20.774528Z  INFO herdr::server::headless: client connected client_id=4 cols=197 rows=61 cell_width_px=16 cell_height_px=35 surface_active=true render_encoding=SemanticFrame
+2026-09-25T01:38:32.277346Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=2 rows=61 cols=197 scrollback_limit_bytes=10000000
+2026-09-25T01:38:32.284238Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=2 pid=9539
+2026-09-25T01:38:32.284501Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:38:37.290122Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:39:05.914896Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=2 status="ExitStatus { code: 1, signal: None }"
+2026-09-25T01:39:05.937921Z  INFO herdr::pane: pane session terminated pane=2 pid=9539 signal=Hangup
+2026-09-25T01:39:05.939461Z  WARN herdr::app::actions: PaneDied for unknown pane pane=2
+2026-09-25T01:39:08.048519Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=3 rows=61 cols=197 scrollback_limit_bytes=10000000
+2026-09-25T01:39:08.053074Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=3 pid=9685
+2026-09-25T01:39:08.053190Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:39:11.699957Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:39:16.704614Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:39:51.781508Z  INFO herdr::pane: agent changed pane=1 previous_agent=None agent=Some(Codex) process=codex pgid=Some(9836)
+2026-09-25T01:39:54.683761Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:39:59.687515Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:40:04.375222Z  INFO herdr::pane: agent changed pane=3 previous_agent=None agent=Some(Claude) process=claude pgid=Some(9999)
+2026-09-25T01:40:07.588297Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:40:12.592519Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:40:26.325756Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:40:29.436916Z  INFO herdr::pane: agent changed pane=3 previous_agent=Some(Claude) agent=None pgid=Some(9685)
+2026-09-25T01:40:34.138870Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:40:49.028082Z  INFO herdr::pane: agent changed pane=3 previous_agent=None agent=Some(Claude) process=claude pgid=Some(10839)
+2026-09-25T01:40:55.927133Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:41:41.487364Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:41:46.492677Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:42:31.573442Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:42:36.576819Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:43:23.278361Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T01:43:28.281246Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T01:52:27.893243Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-09-25T02:22:27.895646Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-09-25T02:39:43.812917Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T02:39:48.817581Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T02:41:12.673550Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T02:41:14.620608Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T02:41:19.624184Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T02:52:27.902021Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-09-25T03:05:57.953525Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=4 rows=61 cols=99 scrollback_limit_bytes=10000000
+2026-09-25T03:05:57.957702Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=4 pid=26934
+2026-09-25T03:05:57.958128Z  INFO herdr::logging: workspace created event="workspace.create" subsystem="workspace" outcome="ok" workspace_id="w2" pane_id=4
+2026-09-25T03:05:57.958142Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T03:05:57.958151Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T03:06:02.961115Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T03:06:10.080752Z  INFO herdr::pane: agent changed pane=4 previous_agent=None agent=Some(Codex) process=codex pgid=Some(27029)
+2026-09-25T03:07:28.426878Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T03:14:18.257367Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T03:14:18.257468Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T03:14:18.257499Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T03:14:18.257510Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T03:14:23.262137Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T03:14:25.471463Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T03:14:25.471521Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T03:14:25.471554Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T03:14:25.471566Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T03:14:30.475567Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T03:22:27.906304Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-09-25T03:29:09.965218Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T03:29:09.965308Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T03:29:11.315275Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T03:29:11.315376Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T03:29:11.315410Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T03:29:11.315421Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T03:29:16.319375Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T03:31:02.648001Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T03:31:02.648115Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T03:31:02.648175Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T03:31:02.648199Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T03:31:07.652623Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T03:52:27.910148Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-09-25T04:04:33.269516Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T04:04:33.269553Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T04:04:33.269569Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T04:04:33.269583Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T04:04:38.272731Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T04:05:24.569048Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T04:05:24.569138Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T04:05:24.569174Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T04:05:24.569186Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T04:05:29.572633Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T04:22:27.910255Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-09-25T04:52:27.911631Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-09-25T05:19:51.116195Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T05:19:51.116340Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T05:19:51.116428Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T05:19:51.116462Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T05:19:56.121426Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T05:20:03.438150Z  INFO herdr::pane: agent changed pane=3 previous_agent=Some(Claude) agent=None pgid=Some(9685)
+2026-09-25T05:20:05.549641Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T05:20:08.881602Z  INFO herdr::pane: agent changed pane=1 previous_agent=Some(Codex) agent=None pgid=Some(4759)
+2026-09-25T05:20:13.582955Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T05:20:56.533406Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T05:20:56.533500Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T05:20:57.545008Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T05:20:57.545102Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T05:20:57.545164Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-09-25T05:20:57.545188Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-09-25T05:20:58.353822Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T05:20:58.353916Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T05:20:58.353954Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T05:20:58.353966Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-09-25T05:21:03.358031Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=2
+2026-09-25T05:21:11.532216Z  INFO herdr::logging: workspace closed event="workspace.close" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-09-25T05:21:11.535453Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=1 status="ExitStatus { code: 1, signal: None }"
+2026-09-25T05:21:11.556129Z  INFO herdr::pane: pane session terminated pane=1 pid=4759 signal=Hangup
+2026-09-25T05:21:12.092364Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=3 status="ExitStatus { code: 1, signal: Some(\"Killed: 9\") }"
+2026-09-25T05:21:12.110154Z  INFO herdr::pane: pane session terminated pane=3 pid=9685 signal=Kill
+2026-09-25T05:21:12.111082Z  WARN herdr::app::actions: PaneDied for unknown pane pane=1
+2026-09-25T05:21:12.111124Z  WARN herdr::app::actions: PaneDied for unknown pane pane=3
+2026-09-25T05:21:17.114298Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/lvcas0x1/.config/herdr/session.json workspaces=1
+2026-09-25T05:21:19.955967Z  INFO herdr::server::headless: client detached client_id=4
+2026-09-25T05:21:25.265362Z  INFO herdr::server::headless: client connected client_id=6 cols=197 rows=61 cell_width_px=16 cell_height_px=35 surface_active=true render_encoding=SemanticFrame
+2026-09-25T05:22:27.916403Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
