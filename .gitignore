@@ -1,19 +1,68 @@
-.DS_Store
-/dlv
-/gcloud
-/gh
-/nvim/log/pdf
-/swiftpm
+# ============================================================
+#  方針: まず全部除外し、必要なものだけ許可する
+# ============================================================
 
-# Claude Code
+# --- ルートは全部除外（新しいツールのディレクトリが勝手に入らないように） ---
+/*
+!/.gitignore
+
+# --- どこにあっても常に除外 ---
+.DS_Store
+*.sock
+*.log
+*.bak
+__pycache__/
+*.pyc
+
+# ============================================================
+#  丸ごと許可するディレクトリ
+# ============================================================
+!/git/
+!/hammerspoon/
+!/homebrew/
+!/karabiner/
+!/lazygit/
+!/nvim/
+!/rss/
+!/utilities/
+!/wezterm/
+!/yazi/
+!/zshrc/
+
+# homebrew: ロックファイルは不要
+/homebrew/trust.json.lock
+
+# nvim: log/ は言語別の動作確認用サンプル。ソースは残しビルド成果物だけ除外
+/nvim/log/*/target/
+/nvim/log/*/node_modules/
+/nvim/log/c/main
+/nvim/log/c/main.dSYM/
+
+# ============================================================
+#  中身を選んで許可するディレクトリ
+# ============================================================
+
+# --- Claude Code ---
+!/claude/
 /claude/*
 !/claude/settings.json
 !/claude/hooks/
 
-# Codex
+# --- Codex ---
+!/codex/
 /codex/*
+!/codex/AGENTS.md
 !/codex/config.toml
 !/codex/hooks.json
 !/codex/skills/
-!/codex/AGENTS.md
+!/codex/browser/
+/codex/browser/*
 !/codex/browser/config.toml
+
+# Codex が自動更新する組み込みスキルは追跡しない
+/codex/skills/.system/
+
+# --- Herdr ---
+!/herdr/
+/herdr/*
+!/herdr/config.toml
